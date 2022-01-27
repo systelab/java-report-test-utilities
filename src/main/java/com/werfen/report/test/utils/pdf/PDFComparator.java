@@ -8,9 +8,20 @@ import java.io.File;
 import java.io.IOException;
 
 import static java.util.Objects.isNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PDFComparator {
-    public static void assertFileEquals(File expectedFile, File actualFile) throws IOException, FilesNotEqualException {
+
+    public static void assertFileEquals(File expectedFile, File actualFile) {
+        assertDoesNotThrow(() -> compareFileEquals(expectedFile, actualFile));
+    }
+
+    public static void assertFileNotEquals(File expectedFile, File actualFile) {
+        assertThrows(FilesNotEqualException.class, () -> compareFileEquals(expectedFile, actualFile));
+    }
+
+    private static void compareFileEquals(File expectedFile, File actualFile) throws IOException, FilesNotEqualException {
         try (PDDocument expected = PDDocument.load(expectedFile);
              PDDocument actual = PDDocument.load(actualFile)) {
             PDFTextStripper textStripper = new PDFTextStripper();
