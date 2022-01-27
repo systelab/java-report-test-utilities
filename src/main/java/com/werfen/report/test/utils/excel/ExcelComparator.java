@@ -25,7 +25,7 @@ public class ExcelComparator {
         assertThrows(FilesNotEqualException.class, () -> ExcelComparator.compareFileEquals(expectedFile, actualFile));
     }
 
-    public static void compareFileEquals(File expectedFile, File actualFile) throws IOException, InvalidFormatException, FilesNotEqualException {
+    private static void compareFileEquals(File expectedFile, File actualFile) throws IOException, InvalidFormatException, FilesNotEqualException {
         try (FileInputStream expectedFileInputStream = new FileInputStream(expectedFile);
              Workbook expected = WorkbookFactory.create(expectedFileInputStream);
              Workbook generated = new XSSFWorkbook(actualFile)) {
@@ -33,7 +33,7 @@ public class ExcelComparator {
         }
     }
 
-    public static void compareWorkbookEquals(Workbook expected, Workbook actual) throws FilesNotEqualException {
+    private static void compareWorkbookEquals(Workbook expected, Workbook actual) throws FilesNotEqualException {
         int expectedSheetCount = expected.getNumberOfSheets();
         int actualSheetCount = actual.getNumberOfSheets();
         if (expectedSheetCount != actualSheetCount)
@@ -44,7 +44,7 @@ public class ExcelComparator {
         }
     }
 
-    public static void compareSheetEquals(Sheet expectedSheet, Sheet actualSheet) throws FilesNotEqualException {
+    private static void compareSheetEquals(Sheet expectedSheet, Sheet actualSheet) throws FilesNotEqualException {
         String expectedSheetName = expectedSheet.getSheetName();
         String actualSheetName = actualSheet.getSheetName();
         if (isNull(expectedSheetName) || isNull(actualSheetName) || !expectedSheetName.equals(actualSheetName))
@@ -60,7 +60,7 @@ public class ExcelComparator {
         }
     }
 
-    public static void compareRowEquals(Row expected, Row actual) throws FilesNotEqualException {
+    private static void compareRowEquals(Row expected, Row actual) throws FilesNotEqualException {
         if (nonNull(expected) && nonNull(actual)) {
             int expectedCellCount = expected.getPhysicalNumberOfCells();
             int actualCellCount = actual.getPhysicalNumberOfCells();
@@ -73,7 +73,7 @@ public class ExcelComparator {
         }
     }
 
-    public static void compareCellEquals(Cell expected, Cell actual) throws FilesNotEqualException {
+    private static void compareCellEquals(Cell expected, Cell actual) throws FilesNotEqualException {
         if (nonNull(expected) && nonNull(actual)) {
             if (expected.getCellType().equals(actual.getCellType())) {
                 switch (expected.getCellType()) {
