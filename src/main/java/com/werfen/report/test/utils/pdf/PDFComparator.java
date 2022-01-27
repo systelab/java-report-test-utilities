@@ -1,4 +1,4 @@
-package com.werfen.report.test.pdf;
+package com.werfen.report.test.utils.pdf;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;

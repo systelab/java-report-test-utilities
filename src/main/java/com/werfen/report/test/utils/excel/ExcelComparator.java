@@ -1,4 +1,4 @@
-package com.werfen.report.test.excel;
+package com.werfen.report.test.utils.excel;
 
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -15,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class ExcelComparator {
 
-    public static void assertFileEquals(String expectedFilePath, File actualFile) throws IOException, InvalidFormatException {
-        File expectedFile = new File(expectedFilePath);
+    public static void assertFileEquals(File expectedFile, File actualFile) throws IOException, InvalidFormatException {
         try (FileInputStream expectedFileInputStream = new FileInputStream(expectedFile);
              Workbook expected = WorkbookFactory.create(expectedFileInputStream);
              Workbook generated = new XSSFWorkbook(actualFile)) {
