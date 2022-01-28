@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static com.werfen.report.test.utils.assertions.FileComparisionAssertions.assertFilesAreDifferent;
-import static com.werfen.report.test.utils.assertions.FileComparisionAssertions.assertFilesAreEqual;
+import static com.werfen.report.test.utils.assertions.ComparisonResultAssertions.assertFilesAreDifferent;
+import static com.werfen.report.test.utils.assertions.ComparisonResultAssertions.assertFilesAreEqual;
 import static com.werfen.report.test.utils.pdf.PDFComparator.compareFiles;
 
 public class PDFComparatorTest {
