@@ -1,6 +1,7 @@
 package com.werfen.report.test.utils.pdf;
 
 import com.werfen.report.test.utils.exception.FilesNotEqualException;
+import com.werfen.report.test.utils.model.ComparisonResult;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -8,27 +9,18 @@ import java.io.File;
 import java.io.IOException;
 
 import static java.util.Objects.isNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PDFComparator {
 
-    public static void assertFileEquals(File expectedFile, File actualFile) {
-        assertDoesNotThrow(() -> compareFileEquals(expectedFile, actualFile));
-    }
-
-    public static void assertFileNotEquals(File expectedFile, File actualFile) {
-        assertThrows(FilesNotEqualException.class, () -> compareFileEquals(expectedFile, actualFile));
-    }
-
-    private static void compareFileEquals(File expectedFile, File actualFile) throws IOException, FilesNotEqualException {
+    public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException, FilesNotEqualException {
         try (PDDocument expected = PDDocument.load(expectedFile);
              PDDocument actual = PDDocument.load(actualFile)) {
             PDFTextStripper textStripper = new PDFTextStripper();
             String expectedText = textStripper.getText(expected);
             String actualText = textStripper.getText(actual);
             if (isNull(expectedText) || isNull(actualText) || !expectedText.equals(actualText))
-                throw new FilesNotEqualException("PDF documents have different text content", expectedText, actualText);
+                return ComparisonResult.DIFFERENT.setDifferences("PDF documents have different text content. Expected=" + expectedText + " Actual=" + actualText);
+            else return ComparisonResult.EQUAL;
         }
     }
 }
