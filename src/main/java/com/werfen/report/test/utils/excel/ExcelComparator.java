@@ -2,6 +2,7 @@ package com.werfen.report.test.utils.excel;
 
 
 import com.werfen.report.test.utils.exception.FilesNotEqualException;
+import com.werfen.report.test.utils.model.ComparisonResult;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,68 +13,69 @@ import java.io.IOException;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ExcelComparator {
 
-    public static void assertFileEquals(File expectedFile, File actualFile) {
-        assertDoesNotThrow(() -> ExcelComparator.compareFileEquals(expectedFile, actualFile));
-    }
-
-    public static void assertFileNotEquals(File expectedFile, File actualFile) {
-        assertThrows(FilesNotEqualException.class, () -> ExcelComparator.compareFileEquals(expectedFile, actualFile));
-    }
-
-    private static void compareFileEquals(File expectedFile, File actualFile) throws IOException, InvalidFormatException, FilesNotEqualException {
+    public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException, InvalidFormatException {
         try (FileInputStream expectedFileInputStream = new FileInputStream(expectedFile);
              Workbook expected = WorkbookFactory.create(expectedFileInputStream);
              Workbook generated = new XSSFWorkbook(actualFile)) {
-            compareWorkbookEquals(expected, generated);
+            return compareWorkbooks(expected, generated);
         }
     }
 
-    private static void compareWorkbookEquals(Workbook expected, Workbook actual) throws FilesNotEqualException {
+    public static ComparisonResult compareWorkbooks(Workbook expected, Workbook actual) throws FilesNotEqualException {
         int expectedSheetCount = expected.getNumberOfSheets();
         int actualSheetCount = actual.getNumberOfSheets();
         if (expectedSheetCount != actualSheetCount)
-            throw new FilesNotEqualException("Excel work books have different number of sheets", String.valueOf(expectedSheetCount), String.valueOf(actualSheetCount));
+            return ComparisonResult.DIFFERENT.setDifferences("Excel work books have different number of sheets. Expected=" + expectedSheetCount + " Actual=" + actualSheetCount);
 
         for (int sheetIndex = 0; sheetIndex < expectedSheetCount; sheetIndex++) {
-            compareSheetEquals(expected.getSheetAt(sheetIndex), actual.getSheetAt(sheetIndex));
+            ComparisonResult comparisonResult = compareSheets(expected.getSheetAt(sheetIndex), actual.getSheetAt(sheetIndex));
+            if (!comparisonResult.areEqual())
+                return comparisonResult;
         }
+        return ComparisonResult.EQUAL;
     }
 
-    private static void compareSheetEquals(Sheet expectedSheet, Sheet actualSheet) throws FilesNotEqualException {
+    public static ComparisonResult compareSheets(Sheet expectedSheet, Sheet actualSheet) {
         String expectedSheetName = expectedSheet.getSheetName();
         String actualSheetName = actualSheet.getSheetName();
         if (isNull(expectedSheetName) || isNull(actualSheetName) || !expectedSheetName.equals(actualSheetName))
-            throw new FilesNotEqualException("Sheets have different names", expectedSheetName, actualSheetName);
+            return ComparisonResult.DIFFERENT.setDifferences("Sheets have different names. Expected=" + expectedSheetName + " Actual= " + actualSheetName);
 
         int expectedRowCount = expectedSheet.getPhysicalNumberOfRows();
         int actualRowCount = actualSheet.getPhysicalNumberOfRows();
         if (expectedRowCount != actualRowCount)
-            throw new FilesNotEqualException("Sheet " + actualSheet.getSheetName() + " have different number of rows", String.valueOf(expectedRowCount), String.valueOf(actualRowCount));
+            return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualSheet.getSheetName() + " have different number of rows. Expected=" + expectedRowCount + " Actual=" + actualRowCount);
 
         for (int rowIndex = 0; rowIndex < expectedRowCount; rowIndex++) {
-            compareRowEquals(expectedSheet.getRow(rowIndex), actualSheet.getRow(rowIndex));
+            ComparisonResult comparisonResult = compareRows(expectedSheet.getRow(rowIndex), actualSheet.getRow(rowIndex));
+            if (!comparisonResult.areEqual())
+                return comparisonResult;
         }
+        return ComparisonResult.EQUAL;
     }
 
-    private static void compareRowEquals(Row expected, Row actual) throws FilesNotEqualException {
+    public static ComparisonResult compareRows(Row expected, Row actual) {
         if (nonNull(expected) && nonNull(actual)) {
             int expectedCellCount = expected.getPhysicalNumberOfCells();
             int actualCellCount = actual.getPhysicalNumberOfCells();
             if (expectedCellCount != actualCellCount)
-                throw new FilesNotEqualException("Sheet " + actual.getSheet().getSheetName() + " have different number of cells in row " + actual.getRowNum(), String.valueOf(expectedCellCount), String.valueOf(actualCellCount));
+                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actual.getSheet().getSheetName() + " have different number of cells in row " + actual.getRowNum() + ". Expected=" + expectedCellCount + " Actual=" + actualCellCount);
 
             for (int cellIndex = 0; cellIndex < expectedCellCount; cellIndex++) {
-                compareCellEquals(expected.getCell(cellIndex), actual.getCell(cellIndex));
+                ComparisonResult comparisonResult = compareCells(expected.getCell(cellIndex), actual.getCell(cellIndex));
+                if (!comparisonResult.areEqual())
+                    return comparisonResult;
             }
+            return ComparisonResult.EQUAL;
+        } else {
+            return ComparisonResult.DIFFERENT.setDifferences("Rows are null. Expected=" + expected + " Actual=" + actual);
         }
     }
 
-    private static void compareCellEquals(Cell expected, Cell actual) throws FilesNotEqualException {
+    public static ComparisonResult compareCells(Cell expected, Cell actual) {
         if (nonNull(expected) && nonNull(actual)) {
             if (expected.getCellType().equals(actual.getCellType())) {
                 switch (expected.getCellType()) {
@@ -81,7 +83,7 @@ public class ExcelComparator {
                         String expectedCellStringValue = expected.getStringCellValue();
                         String actualCellStringValue = actual.getStringCellValue();
                         if (isNull(expectedCellStringValue) || isNull(actualCellStringValue) || !expectedCellStringValue.equals(actualCellStringValue))
-                            throw new FilesNotEqualException("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum(), expectedCellStringValue, actualCellStringValue);
+                            return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum() + ". Expected=" + expectedCellStringValue + " Actual=" + actualCellStringValue);
                         break;
 
                     case NUMERIC:
@@ -90,12 +92,12 @@ public class ExcelComparator {
                             String expectedCellDateValue = df.formatCellValue(expected);
                             String actualCellDateValue = df.formatCellValue(actual);
                             if (isNull(expectedCellDateValue) || isNull(actualCellDateValue) || !expectedCellDateValue.equals(actualCellDateValue))
-                                throw new FilesNotEqualException("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum(), expectedCellDateValue, actualCellDateValue);
+                                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum() + ". Expected=" + expectedCellDateValue + " Actual=" + actualCellDateValue);
                         } else {
                             double expectedCellNumericValue = expected.getNumericCellValue();
                             double actualCellNumericValue = actual.getNumericCellValue();
                             if (expectedCellNumericValue != actualCellNumericValue)
-                                throw new FilesNotEqualException("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum(), String.valueOf(expectedCellNumericValue), String.valueOf(actualCellNumericValue));
+                                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum() + ". Expected=" + expectedCellNumericValue + " Actual=" + actualCellNumericValue);
                         }
                         break;
 
@@ -103,16 +105,17 @@ public class ExcelComparator {
                         boolean expectedCellBooleanValue = expected.getBooleanCellValue();
                         boolean actualCellBooleanValue = actual.getBooleanCellValue();
                         if (expectedCellBooleanValue != actualCellBooleanValue)
-                            throw new FilesNotEqualException("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum(), String.valueOf(expectedCellBooleanValue), String.valueOf(actualCellBooleanValue));
+                            return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actual.getSheet().getSheetName() + " has different cell " + actual.getColumnIndex() + " values in row " + actual.getRow().getRowNum() + ". Expected=" + expectedCellBooleanValue + " Actual=" + actualCellBooleanValue);
                         break;
 
                     default:
-                        throw new FilesNotEqualException("Unexpected cell type in row " + actual.getRow().getRowNum() + " cell " + actual.getColumnIndex());
+                        return ComparisonResult.DIFFERENT.setDifferences("Unexpected cell type in row " + actual.getRow().getRowNum() + " cell " + actual.getColumnIndex());
                 }
 
             } else {
-                throw new FilesNotEqualException("Unexpected cell type in row " + actual.getRow().getRowNum() + " cell " + actual.getColumnIndex());
+                return ComparisonResult.DIFFERENT.setDifferences("Unexpected cell type in row " + actual.getRow().getRowNum() + " cell " + actual.getColumnIndex());
             }
         }
+        return ComparisonResult.EQUAL;
     }
 }
