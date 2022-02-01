@@ -4,7 +4,6 @@ package com.werfen.report.test.utils.excel;
 import com.werfen.report.test.utils.model.ComparisonResult;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,9 +17,10 @@ public class ExcelComparator {
     public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException, InvalidFormatException {
         if (nonNull(expectedFile) && nonNull(actualFile)) {
             try (FileInputStream expectedFileInputStream = new FileInputStream(expectedFile);
-                 Workbook expected = WorkbookFactory.create(expectedFileInputStream);
-                 Workbook generated = new XSSFWorkbook(actualFile)) {
-                return compareWorkbooks(expected, generated);
+                 FileInputStream actualFileInputStream = new FileInputStream(actualFile);
+                 Workbook expectedWorkbook = WorkbookFactory.create(expectedFileInputStream);
+                 Workbook actualWorkbook = WorkbookFactory.create(actualFileInputStream)) {
+                return compareWorkbooks(expectedWorkbook, actualWorkbook);
             }
         } else if (isNull(expectedFile) && isNull(actualFile)) {
             return ComparisonResult.EQUAL;
