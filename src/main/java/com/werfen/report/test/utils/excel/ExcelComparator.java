@@ -2,7 +2,6 @@ package com.werfen.report.test.utils.excel;
 
 
 import com.werfen.report.test.utils.model.ComparisonResult;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
@@ -14,7 +13,7 @@ import static java.util.Objects.nonNull;
 
 public class ExcelComparator {
 
-    public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException, InvalidFormatException {
+    public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException {
         if (nonNull(expectedFile) && nonNull(actualFile)) {
             try (FileInputStream expectedFileInputStream = new FileInputStream(expectedFile);
                  FileInputStream actualFileInputStream = new FileInputStream(actualFile);
@@ -25,7 +24,7 @@ public class ExcelComparator {
         } else if (isNull(expectedFile) && isNull(actualFile)) {
             return ComparisonResult.EQUAL;
         } else {
-            return ComparisonResult.DIFFERENT.setDifferences("Files are different. Expected=" + expectedFile + " Actual=" + actualFile);
+            return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(file). Expected=" + isNull(expectedFile) + " Actual=" + isNull(actualFile));
         }
     }
 
@@ -39,13 +38,13 @@ public class ExcelComparator {
             for (int sheetIndex = 0; sheetIndex < expectedSheetCount; sheetIndex++) {
                 ComparisonResult comparisonResult = compareSheets(expectedWorkbook.getSheetAt(sheetIndex), actualWorkbook.getSheetAt(sheetIndex));
                 if (!comparisonResult.areEqual())
-                    return comparisonResult;
+                    return ComparisonResult.DIFFERENT.setDifferences("Different data on sheet " + sheetIndex + ": " + comparisonResult.getDifferences());
             }
             return ComparisonResult.EQUAL;
         } else if (isNull(expectedWorkbook) && isNull(actualWorkbook)) {
             return ComparisonResult.EQUAL;
         } else {
-            return ComparisonResult.DIFFERENT.setDifferences("Workbooks are different. Expected=" + expectedWorkbook + " Actual=" + actualWorkbook);
+            return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(workbook). Expected=" + isNull(expectedWorkbook) + " Actual=" + isNull(actualWorkbook));
         }
     }
 
@@ -54,23 +53,23 @@ public class ExcelComparator {
             String expectedSheetName = expectedSheet.getSheetName();
             String actualSheetName = actualSheet.getSheetName();
             if (!expectedSheetName.equals(actualSheetName))
-                return ComparisonResult.DIFFERENT.setDifferences("Sheets have different names. Expected=" + expectedSheetName + " Actual= " + actualSheetName);
+                return ComparisonResult.DIFFERENT.setDifferences("Different names. Expected=" + expectedSheetName + " Actual= " + actualSheetName);
 
             int expectedRowCount = expectedSheet.getPhysicalNumberOfRows();
             int actualRowCount = actualSheet.getPhysicalNumberOfRows();
             if (expectedRowCount != actualRowCount)
-                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualSheet.getSheetName() + " have different number of rows. Expected=" + expectedRowCount + " Actual=" + actualRowCount);
+                return ComparisonResult.DIFFERENT.setDifferences("Different number of rows. Expected=" + expectedRowCount + " Actual=" + actualRowCount);
 
             for (int rowIndex = 0; rowIndex < expectedRowCount; rowIndex++) {
                 ComparisonResult comparisonResult = compareRows(expectedSheet.getRow(rowIndex), actualSheet.getRow(rowIndex));
                 if (!comparisonResult.areEqual())
-                    return comparisonResult;
+                    return ComparisonResult.DIFFERENT.setDifferences("Different data on row " + rowIndex + ": " + comparisonResult.getDifferences());
             }
             return ComparisonResult.EQUAL;
         } else if (isNull(expectedSheet) && isNull(actualSheet)) {
             return ComparisonResult.EQUAL;
         } else {
-            return ComparisonResult.DIFFERENT.setDifferences("Sheets are different. Expected=" + expectedSheet + " Actual=" + actualSheet);
+            return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(sheet). Expected=" + isNull(expectedSheet) + " Actual=" + isNull(actualSheet));
         }
     }
 
@@ -79,18 +78,18 @@ public class ExcelComparator {
             int expectedCellCount = expectedRow.getPhysicalNumberOfCells();
             int actualCellCount = actualRow.getPhysicalNumberOfCells();
             if (expectedCellCount != actualCellCount)
-                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualRow.getSheet().getSheetName() + " have different number of cells in row " + actualRow.getRowNum() + ". Expected=" + expectedCellCount + " Actual=" + actualCellCount);
+                return ComparisonResult.DIFFERENT.setDifferences("Different number of cells. Expected=" + expectedCellCount + " Actual=" + actualCellCount);
 
             for (int cellIndex = 0; cellIndex < expectedCellCount; cellIndex++) {
                 ComparisonResult comparisonResult = compareCells(expectedRow.getCell(cellIndex), actualRow.getCell(cellIndex));
                 if (!comparisonResult.areEqual())
-                    return comparisonResult;
+                    return ComparisonResult.DIFFERENT.setDifferences("Different data on cell " + cellIndex + ": " + comparisonResult.getDifferences());
             }
             return ComparisonResult.EQUAL;
         } else if (isNull(expectedRow) && isNull(actualRow)) {
             return ComparisonResult.EQUAL;
         } else {
-            return ComparisonResult.DIFFERENT.setDifferences("Rows are different. Expected=" + expectedRow + " Actual=" + actualRow);
+            return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(row). Expected=" + isNull(expectedRow) + " Actual=" + isNull(actualRow));
         }
     }
 
@@ -99,12 +98,12 @@ public class ExcelComparator {
             CellType expectedCellType = expectedCell.getCellType();
             CellType actualCellType = actualCell.getCellType();
             if (expectedCellType.equals(actualCellType)) {
-                switch (expectedCell.getCellType()) {
+                switch (actualCellType) {
                     case STRING:
                         String expectedCellStringValue = expectedCell.getStringCellValue();
                         String actualCellStringValue = actualCell.getStringCellValue();
                         if (!expectedCellStringValue.equals(actualCellStringValue))
-                            return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualCell.getSheet().getSheetName() + " has different cell " + actualCell.getColumnIndex() + " values in row " + actualCell.getRow().getRowNum() + ". Expected=" + expectedCellStringValue + " Actual=" + actualCellStringValue);
+                            return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellStringValue + " Actual=" + actualCellStringValue);
                         else
                             return ComparisonResult.EQUAL;
 
@@ -114,14 +113,14 @@ public class ExcelComparator {
                             String expectedCellDateValue = df.formatCellValue(expectedCell);
                             String actualCellDateValue = df.formatCellValue(actualCell);
                             if (!expectedCellDateValue.equals(actualCellDateValue))
-                                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualCell.getSheet().getSheetName() + " has different cell " + actualCell.getColumnIndex() + " values in row " + actualCell.getRow().getRowNum() + ". Expected=" + expectedCellDateValue + " Actual=" + actualCellDateValue);
+                                return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellDateValue + " Actual=" + actualCellDateValue);
                             else
                                 return ComparisonResult.EQUAL;
                         } else {
                             double expectedCellNumericValue = expectedCell.getNumericCellValue();
                             double actualCellNumericValue = actualCell.getNumericCellValue();
                             if (expectedCellNumericValue != actualCellNumericValue)
-                                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualCell.getSheet().getSheetName() + " has different cell " + actualCell.getColumnIndex() + " values in row " + actualCell.getRow().getRowNum() + ". Expected=" + expectedCellNumericValue + " Actual=" + actualCellNumericValue);
+                                return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellNumericValue + " Actual=" + actualCellNumericValue);
                             else
                                 return ComparisonResult.EQUAL;
                         }
@@ -130,21 +129,21 @@ public class ExcelComparator {
                         boolean expectedCellBooleanValue = expectedCell.getBooleanCellValue();
                         boolean actualCellBooleanValue = actualCell.getBooleanCellValue();
                         if (expectedCellBooleanValue != actualCellBooleanValue)
-                            return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualCell.getSheet().getSheetName() + " has different cell " + actualCell.getColumnIndex() + " values in row " + actualCell.getRow().getRowNum() + ". Expected=" + expectedCellBooleanValue + " Actual=" + actualCellBooleanValue);
+                            return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellBooleanValue + " Actual=" + actualCellBooleanValue);
                         else
                             return ComparisonResult.EQUAL;
 
                     default:
-                        return ComparisonResult.DIFFERENT.setDifferences("Unexpected cell type in row " + actualCell.getRow().getRowNum() + " cell " + actualCell.getColumnIndex());
+                        return ComparisonResult.DIFFERENT.setDifferences("Unexpected cell type. " + actualCellType);
                 }
 
             } else {
-                return ComparisonResult.DIFFERENT.setDifferences("Sheet " + actualCell.getSheet().getSheetName() + " has different cell " + actualCell.getColumnIndex() + " types in row " + actualCell.getRow().getRowNum() + ". Expected=" + expectedCellType + " Actual=" + actualCellType);
+                return ComparisonResult.DIFFERENT.setDifferences("Different cell types. Expected=" + expectedCellType + " Actual=" + actualCellType);
             }
         } else if (isNull(expectedCell) && isNull(actualCell)) {
             return ComparisonResult.EQUAL;
         } else {
-            return ComparisonResult.DIFFERENT.setDifferences("Cells are different. Expected=" + expectedCell + " Actual=" + actualCell);
+            return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(cell). Expected=" + isNull(expectedCell) + " Actual=" + isNull(actualCell));
         }
     }
 }
