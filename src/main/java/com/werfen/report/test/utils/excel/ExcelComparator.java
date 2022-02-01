@@ -97,49 +97,48 @@ public class ExcelComparator {
         if (nonNull(expectedCell) && nonNull(actualCell)) {
             CellType expectedCellType = expectedCell.getCellType();
             CellType actualCellType = actualCell.getCellType();
-            if (expectedCellType.equals(actualCellType)) {
-                switch (actualCellType) {
-                    case STRING:
-                        String expectedCellStringValue = expectedCell.getStringCellValue();
-                        String actualCellStringValue = actualCell.getStringCellValue();
-                        if (!expectedCellStringValue.equals(actualCellStringValue))
-                            return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellStringValue + " Actual=" + actualCellStringValue);
-                        else
-                            return ComparisonResult.EQUAL;
-
-                    case NUMERIC:
-                        if (DateUtil.isCellDateFormatted(expectedCell) | DateUtil.isCellDateFormatted(actualCell)) {
-                            DataFormatter df = new DataFormatter();
-                            String expectedCellDateValue = df.formatCellValue(expectedCell);
-                            String actualCellDateValue = df.formatCellValue(actualCell);
-                            if (!expectedCellDateValue.equals(actualCellDateValue))
-                                return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellDateValue + " Actual=" + actualCellDateValue);
-                            else
-                                return ComparisonResult.EQUAL;
-                        } else {
-                            double expectedCellNumericValue = expectedCell.getNumericCellValue();
-                            double actualCellNumericValue = actualCell.getNumericCellValue();
-                            if (expectedCellNumericValue != actualCellNumericValue)
-                                return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellNumericValue + " Actual=" + actualCellNumericValue);
-                            else
-                                return ComparisonResult.EQUAL;
-                        }
-
-                    case BOOLEAN:
-                        boolean expectedCellBooleanValue = expectedCell.getBooleanCellValue();
-                        boolean actualCellBooleanValue = actualCell.getBooleanCellValue();
-                        if (expectedCellBooleanValue != actualCellBooleanValue)
-                            return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellBooleanValue + " Actual=" + actualCellBooleanValue);
-                        else
-                            return ComparisonResult.EQUAL;
-
-                    default:
-                        return ComparisonResult.DIFFERENT.setDifferences("Unexpected cell type. " + actualCellType);
-                }
-
-            } else {
+            if (!expectedCellType.equals(actualCellType))
                 return ComparisonResult.DIFFERENT.setDifferences("Different cell types. Expected=" + expectedCellType + " Actual=" + actualCellType);
+
+            switch (actualCellType) {
+                case STRING:
+                    String expectedCellStringValue = expectedCell.getStringCellValue();
+                    String actualCellStringValue = actualCell.getStringCellValue();
+                    if (!expectedCellStringValue.equals(actualCellStringValue))
+                        return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellStringValue + " Actual=" + actualCellStringValue);
+                    else
+                        return ComparisonResult.EQUAL;
+
+                case NUMERIC:
+                    if (DateUtil.isCellDateFormatted(expectedCell) | DateUtil.isCellDateFormatted(actualCell)) {
+                        DataFormatter df = new DataFormatter();
+                        String expectedCellDateValue = df.formatCellValue(expectedCell);
+                        String actualCellDateValue = df.formatCellValue(actualCell);
+                        if (!expectedCellDateValue.equals(actualCellDateValue))
+                            return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellDateValue + " Actual=" + actualCellDateValue);
+                        else
+                            return ComparisonResult.EQUAL;
+                    } else {
+                        double expectedCellNumericValue = expectedCell.getNumericCellValue();
+                        double actualCellNumericValue = actualCell.getNumericCellValue();
+                        if (expectedCellNumericValue != actualCellNumericValue)
+                            return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellNumericValue + " Actual=" + actualCellNumericValue);
+                        else
+                            return ComparisonResult.EQUAL;
+                    }
+
+                case BOOLEAN:
+                    boolean expectedCellBooleanValue = expectedCell.getBooleanCellValue();
+                    boolean actualCellBooleanValue = actualCell.getBooleanCellValue();
+                    if (expectedCellBooleanValue != actualCellBooleanValue)
+                        return ComparisonResult.DIFFERENT.setDifferences("Different cell values. Expected=" + expectedCellBooleanValue + " Actual=" + actualCellBooleanValue);
+                    else
+                        return ComparisonResult.EQUAL;
+
+                default:
+                    return ComparisonResult.DIFFERENT.setDifferences("Unexpected cell type. " + actualCellType);
             }
+
         } else if (isNull(expectedCell) && isNull(actualCell)) {
             return ComparisonResult.EQUAL;
         } else {
