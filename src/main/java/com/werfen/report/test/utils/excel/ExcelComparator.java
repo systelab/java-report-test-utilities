@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -16,15 +17,26 @@ public class ExcelComparator {
     public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException {
         if (nonNull(expectedFile) && nonNull(actualFile)) {
             try (FileInputStream expectedFileInputStream = new FileInputStream(expectedFile);
-                 FileInputStream actualFileInputStream = new FileInputStream(actualFile);
-                 Workbook expectedWorkbook = WorkbookFactory.create(expectedFileInputStream);
-                 Workbook actualWorkbook = WorkbookFactory.create(actualFileInputStream)) {
-                return compareWorkbooks(expectedWorkbook, actualWorkbook);
+                 FileInputStream actualFileInputStream = new FileInputStream(actualFile)) {
+                return compareStreams(expectedFileInputStream, actualFileInputStream);
             }
         } else if (isNull(expectedFile) && isNull(actualFile)) {
             return ComparisonResult.EQUAL;
         } else {
             return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(file). Expected=" + isNull(expectedFile) + " Actual=" + isNull(actualFile));
+        }
+    }
+
+    public static ComparisonResult compareStreams(InputStream expectedInputStream, InputStream actualInputStream) throws IOException {
+        if (nonNull(expectedInputStream) && nonNull(actualInputStream)) {
+            try (Workbook expectedWorkbook = WorkbookFactory.create(expectedInputStream);
+                 Workbook actualWorkbook = WorkbookFactory.create(actualInputStream)) {
+                return compareWorkbooks(expectedWorkbook, actualWorkbook);
+            }
+        } else if (isNull(expectedInputStream) && isNull(actualInputStream)) {
+            return ComparisonResult.EQUAL;
+        } else {
+            return ComparisonResult.DIFFERENT.setDifferences("Different value for isNull(file). Expected=" + isNull(expectedInputStream) + " Actual=" + isNull(actualInputStream));
         }
     }
 
