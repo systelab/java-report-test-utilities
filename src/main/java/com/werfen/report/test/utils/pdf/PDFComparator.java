@@ -19,7 +19,7 @@ public class PDFComparator {
         }
     }
 
-    public static ComparisonResult compareFiles(InputStream expectedStream, InputStream actualStream) throws IOException {
+    public static ComparisonResult compareStreams(InputStream expectedStream, InputStream actualStream) throws IOException {
         try (PDDocument expected = PDDocument.load(expectedStream);
              PDDocument actual = PDDocument.load(actualStream)) {
             return compareDocuments(expected, actual);
