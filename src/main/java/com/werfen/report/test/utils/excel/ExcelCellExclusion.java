@@ -1,12 +1,14 @@
 package com.werfen.report.test.utils.excel;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Value
-public class CellExclusion {
-
-  int sheet;
-  int row;
-  int cell;
+@Getter
+@RequiredArgsConstructor
+public class ExcelCellExclusion
+{
+  private final int sheet;
+  private final int row;
+  private final int cell;
 }
 

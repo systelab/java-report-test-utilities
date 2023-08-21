@@ -1,22 +1,26 @@
-package com.werfen.report.test.utils.model;
+package com.werfen.report.test.utils.excel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Value
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExcelComparisonSettings
 {
+  private List<ExcelCellExclusion> excelCellExclusions = new ArrayList<>();
+  private boolean compareCellStyle;
 
-  List<CellExclusion> cellExclusions;
-
-  public ExcelComparisonSettings() {
-    this.cellExclusions = Collections.emptyList();
+  public ExcelComparisonSettings(List<ExcelCellExclusion> excelCellExclusions) {
+    this.excelCellExclusions = excelCellExclusions;
   }
 
-  public ExcelComparisonSettings(List<CellExclusion> cellExclusions) {
-    this.cellExclusions = Collections.unmodifiableList(new ArrayList<>(cellExclusions));
+  public ExcelComparisonSettings(boolean compareCellStyle) {
+    this.compareCellStyle = compareCellStyle;
   }
+
 }
