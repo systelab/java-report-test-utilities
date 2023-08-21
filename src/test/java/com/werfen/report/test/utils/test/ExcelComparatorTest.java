@@ -16,7 +16,7 @@ import static com.werfen.report.test.utils.excel.ExcelComparator.compareFiles;
 
 class ExcelComparatorTest {
 
-    private final String RESOURCE_PATH = "src/test/resources/excel/";
+    private static final String RESOURCE_PATH = "src/test/resources/excel/";
 
     @Test
     void compareFileAgainstItselfDoesNotFail() throws IOException {
@@ -71,7 +71,7 @@ class ExcelComparatorTest {
         boolean compareCellStyle = false;
         ExcelComparisonSettings excelComparisonSettings = new ExcelComparisonSettings(compareCellStyle);
 
-        // Assert that both files are equal when excluding the specified cells
+        // Assert that both files are equal when comparing cell style is ignored
         ComparisonResultAssertions.assertEquals(compareFiles(expectedFile, actualFile, excelComparisonSettings));
     }
 
@@ -90,7 +90,7 @@ class ExcelComparatorTest {
         boolean compareCellStyle = true;
         ExcelComparisonSettings excelComparisonSettings = new ExcelComparisonSettings(compareCellStyle);
 
-        // Assert that both files are equal when excluding the specified cells
+        // Assert that both files are not equals as there are some style differences (some cells are in bold in file 2 and not in file 1)
         ComparisonResultAssertions.assertNotEquals(compareFiles(expectedFile, actualFile, excelComparisonSettings));
 
     }

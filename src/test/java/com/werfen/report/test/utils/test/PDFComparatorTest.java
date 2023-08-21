@@ -14,7 +14,7 @@ import static com.werfen.report.test.utils.pdf.PDFComparator.compareFiles;
 
 class PDFComparatorTest {
 
-    private final String RESOURCE_PATH = "src/test/resources/pdf/";
+    private static final String RESOURCE_PATH = "src/test/resources/pdf/";
 
     @Test
     void compareFilesEqual() throws IOException {
