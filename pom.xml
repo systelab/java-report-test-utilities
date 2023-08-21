@@ -4,7 +4,7 @@
 
     <groupId>com.systelab</groupId>
     <artifactId>java-report-test-utilities</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <packaging>jar</packaging>
     <name>java-report-test-utilities</name>
     <url>https://github.com/systelab/java-report-test-utilities</url>
@@ -44,20 +44,9 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <junit.jupiter.version>5.9.2</junit.jupiter.version>
         <pdfbox.version>2.0.27</pdfbox.version>
-        <log4j.version>2.20.0</log4j.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
