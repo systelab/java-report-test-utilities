@@ -106,6 +106,33 @@ Use **PDFComparator** and **ExcelComparator** compareFiles method as needed.
 ```java
 public static ComparisonResult compareFiles(File expectedFile, File actualFile)
 ```
+The compareFiles method, currently only for Excel, has an additional argument of ExcelComparisonSettings type. 
+
+```java
+public static ComparisonResult compareFiles(File expectedFile, File actualFile, ExcelComparisonSettings excelComparisonSettings)
+```
+
+It allows users to customize how two Excel files are compared:
+Two attributes are available: compareCellStyle and excelCellExclusions.
+
+compareCellStyle: This is a boolean attribute. When set to true, the comparison process will also examine the style of cells. 
+For instance, even if two cells in different files have identical content, they would be flagged as different if their styles vary—such as one having a green background while the other has a red one.
+
+```java
+boolean compareCellStyle = true;
+ExcelComparisonSettings excelComparisonSettings = new ExcelComparisonSettings(compareCellStyle);
+ExcelComparator.compareFiles(expectedFile, actualFile, excelComparisonSettings);
+```
+
+excelCellExclusions: This is a list specifying which cells should be excluded from the comparison. It's particularly helpful in cases where certain cells, like those with timestamps, shouldn't be compared. 
+For instance, to exclude the cell in column 1 (index 0) of row 6 (index 5) on sheet 1 (index 0), you would pass the indices to the constructor in the order: sheet, row, cell. Note that indices start at 0, not 1.
+
+```java
+List<ExcelCellExclusion> excelCellExclusions = new ArrayList<>();
+excelCellExclusions.add(new ExcelCellExclusion(0, 5, 0));
+ExcelComparisonSettings excelComparisonSettings = new ExcelComparisonSettings(excelCellExclusions);
+ExcelComparator.compareFiles(expectedFile, actualFile, excelComparisonSettings);
+```
 
 In a Unit Test, to assert that files are equal or different, it is suggested to use the *assertEquals* and *assertNotEquals* static methods in the **ComparisonResultAssertions** utility class.
 
