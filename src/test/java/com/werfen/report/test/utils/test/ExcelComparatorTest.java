@@ -17,6 +17,7 @@ import static com.werfen.report.test.utils.excel.ExcelComparator.compareFiles;
 class ExcelComparatorTest {
 
     private static final String RESOURCE_PATH = "src/test/resources/excel/";
+    private static final String RESOURCE_PATH_FILE_ROWS_BLANK_CELL = RESOURCE_PATH + "file_row_blank_cells/";
 
     @Test
     void compareFileAgainstItselfDoesNotFail() throws IOException {
@@ -93,6 +94,40 @@ class ExcelComparatorTest {
         // Assert that both files are not equals as there are some style differences (some cells are in bold in file 2 and not in file 1)
         ComparisonResultAssertions.assertNotEquals(compareFiles(expectedFile, actualFile, excelComparisonSettings));
 
+    }
+
+    @Test
+    /*
+      Compares two Excel files focusing on rows with blank cells.
+      This test ensures that even rows with blank cells are accurately compared between the two Excel files.
+      Such a scenario can arise when data in Excel sheets is not populated continuously, leaving gaps or
+      blank cells in the rows.
+      Expected Outcome:
+      The content of the rows (including blank cells) in the two Excel files IS THE SAME, so the test
+      returns that both files are equals.
+     */
+    void compareFilesWithBlankCellsInARowWithMatchingContentDoesNotFail() throws IOException
+    {
+        File expectedFile = new File(RESOURCE_PATH_FILE_ROWS_BLANK_CELL + "file_row_with_blank_cells_matching_content.xlsx");
+        File actualFile = new File(RESOURCE_PATH_FILE_ROWS_BLANK_CELL + "file_row_with_blank_cells_matching_content_2.xlsx");
+        ComparisonResultAssertions.assertEquals(compareFiles(expectedFile, actualFile));
+    }
+
+    @Test
+    /*
+      Compares two Excel files focusing on rows with blank cells.
+      This test ensures that even rows with blank cells are accurately compared between the two Excel files.
+      Such a scenario can arise when data in Excel sheets is not populated continuously, leaving gaps or
+      blank cells in the rows.
+      Expected Outcome:
+      The content of the rows (including blank cells) in the two Excel files IS DIFFERENT, so the test
+      returns a failure indicating the discrepancy.
+     */
+    void compareFilesWithBlankCellsInARowWithDifferentContentFails() throws IOException
+    {
+        File expectedFile = new File(RESOURCE_PATH_FILE_ROWS_BLANK_CELL + "file_row_with_blank_cells_different_content.xlsx");
+        File actualFile = new File(RESOURCE_PATH_FILE_ROWS_BLANK_CELL + "file_row_with_blank_cells_different_content_2.xlsx");
+        ComparisonResultAssertions.assertNotEquals(compareFiles(expectedFile, actualFile));
     }
 
 }
