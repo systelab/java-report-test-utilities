@@ -78,8 +78,8 @@ public class ExcelComparator {
             if (!expectedSheetName.equals(actualSheetName))
                 return ComparisonResult.DIFFERENT.setDifferences("Different names. Expected=" + expectedSheetName + " Actual= " + actualSheetName);
 
-            int expectedRowCount = expectedSheet.getPhysicalNumberOfRows();
-            int actualRowCount = actualSheet.getPhysicalNumberOfRows();
+            int expectedRowCount = expectedSheet.getLastRowNum() + 1;
+            int actualRowCount = actualSheet.getLastRowNum() + 1;
             if (expectedRowCount != actualRowCount)
                 return ComparisonResult.DIFFERENT.setDifferences("Different number of rows. Expected=" + expectedRowCount + " Actual=" + actualRowCount);
 
@@ -103,7 +103,7 @@ public class ExcelComparator {
             if (expectedCellCount != actualCellCount)
                 return ComparisonResult.DIFFERENT.setDifferences("Different number of cells. Expected=" + expectedCellCount + " Actual=" + actualCellCount);
 
-            for (int cellIndex = 0; cellIndex < expectedCellCount; cellIndex++) {
+            for (int cellIndex = 0; cellIndex < expectedRow.getLastCellNum(); ++cellIndex) {
                 ComparisonResult comparisonResult = compareCells(expectedRow.getCell(cellIndex), actualRow.getCell(cellIndex), excelComparisonSettings);
                 if (!comparisonResult.areEqual())
                     return ComparisonResult.DIFFERENT.setDifferences("Different data on cell " + cellIndex + ": " + comparisonResult.getDifferences());
