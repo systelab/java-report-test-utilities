@@ -38,12 +38,12 @@ In order to release a new version:
 Step 1. Update the version in your pom.xml file. For example:
 
 ```
-<version>1.3.0</version>
+<version>v.1.3.1</version>
 ```
 
 Step 2. Commit and push in the master branch, and generate a new Release by pressing the button "Draft new release".
 
-In the example use v.1.3.0 as the Tag version, and 1.3.0 as the release title.
+In the example use v.1.3.1 as the Tag version, and 1.3.1 as the release title.
 
 Step 3. Head to https://jitpack.io and look up "systelab/java-report-test-utilities". Choose the new version and press the button "Get it". Check the log to verify that everything is fine.
 
@@ -72,7 +72,7 @@ Step 2. Add the dependency
 
 ```
 dependencies {
-    implementation 'com.github.systelab:java-report-test-utilities:v1.3.0'
+    implementation 'com.github.systelab:java-report-test-utilities:v1.3.1'
 }
 ```
 
@@ -95,7 +95,7 @@ Step 2. Add the dependency
 	<dependency>
 	    <groupId>com.github.systelab</groupId>
 	    <artifactId>java-report-test-utilities</artifactId>
-	    <version>v1.3.0</version>
+	    <version>v1.3.1</version>
 	</dependency>
 ```
 
