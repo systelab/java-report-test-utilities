@@ -12,7 +12,7 @@ To get you started you can simply clone the `java-report-test-utilities` reposit
 
 You need [git][git] to clone the `java-report-test-utilities` repository.
 
-You will need [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
+You will need [Java™ SE Development Kit 21][jdk-download] and [Maven][maven].
 
 ### Clone
 
