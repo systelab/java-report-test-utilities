@@ -1,7 +1,9 @@
 package com.werfen.report.test.utils.pdf;
 
 import com.werfen.report.test.utils.model.ComparisonResult;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.fdf.FDFDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
@@ -13,15 +15,15 @@ import static java.util.Objects.isNull;
 public class PDFComparator {
 
     public static ComparisonResult compareFiles(File expectedFile, File actualFile) throws IOException {
-        try (PDDocument expected = PDDocument.load(expectedFile);
-             PDDocument actual = PDDocument.load(actualFile)) {
+        try (PDDocument expected = Loader.loadPDF(expectedFile);
+             PDDocument actual = Loader.loadPDF(actualFile)) {
             return compareDocuments(expected, actual);
         }
     }
 
     public static ComparisonResult compareStreams(InputStream expectedStream, InputStream actualStream) throws IOException {
-        try (PDDocument expected = PDDocument.load(expectedStream);
-             PDDocument actual = PDDocument.load(actualStream)) {
+        try (PDDocument expected = Loader.loadPDF(expectedStream.readAllBytes());
+             PDDocument actual = Loader.loadPDF(actualStream.readAllBytes())) {
             return compareDocuments(expected, actual);
         }
     }
