@@ -5,6 +5,7 @@ The Java-Report-Test-Utilities includes code from the following third parties:
 
 * [JitPack](https://jitpack.io) (MIT License)
 * [PDFBox](https://pdfbox.apache.org/) (Apache License)
+* [PDFCompare](https://github.com/red6/pdfcompare) (Apache License 2.0)
 * [Lombok](https://projectlombok.org/) (MIT License)
 * [Apache POI](https://poi.apache.org/) (MIT License)
 * [JUnit 5](https://junit.org/junit5/) (MIT License)

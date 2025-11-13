@@ -1,14 +1,14 @@
 package com.werfen.report.test.utils.pdf;
 
 import com.werfen.report.test.utils.model.ComparisonResult;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.fdf.FDFDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 import static java.util.Objects.isNull;
 
@@ -36,4 +36,6 @@ public class PDFComparator {
             return ComparisonResult.DIFFERENT.setDifferences("PDF documents have different text content. Expected=" + expectedText + " Actual=" + actualText);
         else return ComparisonResult.EQUAL;
     }
+
+
 }
