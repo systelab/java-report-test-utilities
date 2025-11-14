@@ -62,11 +62,12 @@ class PDFVisualComparatorUtilTest {
   void shouldExcludeInputStreamAndMatch() throws IOException {
     PDFVisualComparatorUtil comparator = createComparator();
 
-    final ByteArrayInputStream ignoreIS = new ByteArrayInputStream("exclusions: [{page:2}, {page:3}]".getBytes());
+    final ByteArrayInputStream ignoreIS = new ByteArrayInputStream("exclusions: [{page: 1,x1: 2280,y1: 100,x2: 2880,y2: 200},{page: 2,x1: 2280,y1: 100,x2: 2880,y2: 200},{page: 3,x1: 2280,y1: 100,x2: 2880,y2: 200}]".getBytes());
+
     comparator.excludeInputStream(ignoreIS);
 
     File multiPage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
-    File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
+    File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDatesV2.pdf");
 
     assertTrue(comparator.compare(multiPageOnePage, multiPage, target("diff_exclude_page")),
         "PDFs should be equal after excluding pages");
@@ -81,7 +82,7 @@ class PDFVisualComparatorUtilTest {
     // comparator.excludePage(3);
 
     File multiPage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
-    File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
+    File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDatesV3.pdf");
 
     assertTrue(comparator.compare(multiPageOnePage, multiPage, target("diff_exclude_page")),
         "PDFs should be equal after excluding pages");
