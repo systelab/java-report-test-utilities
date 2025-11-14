@@ -103,7 +103,7 @@ assertTrue(comparator.compare(multiPage, multiPageOnePage, target("diff_exclude_
           "PDFs should be equal after applying the exclusion file");
     }
 #### json Exclusion File Format
-```xml
+```json
 {
   "exclusions": [
     {
@@ -165,6 +165,9 @@ Y (up)
 * The origin (0,0) is at the bottom-left corner of the page.
 * X increases to the right, Y increases upward.
 * Coordinates are measured in pixels (typically 72 per inch).
+
+## Note
+ I have tested to exclude entire pages but althought the documentation of PDFCompare include this feature, it seems that it is not working as expected in version 1.2.6.
 
 ## Links
 * PDFCompare GitHub Repository https://github.com/red6/pdfcompare

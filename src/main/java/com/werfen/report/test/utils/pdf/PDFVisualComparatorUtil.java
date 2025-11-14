@@ -1,14 +1,14 @@
 package com.werfen.report.test.utils.pdf;
 
-import de.redsix.pdfcompare.CompareResult;
-import de.redsix.pdfcompare.PdfComparator;
-import de.redsix.pdfcompare.PageArea;
-import de.redsix.pdfcompare.env.SimpleEnvironment;
-
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.redsix.pdfcompare.CompareResult;
+import de.redsix.pdfcompare.PageArea;
+import de.redsix.pdfcompare.PdfComparator;
 
 /**
  * Utility class for visually comparing two PDF files using pdfcompare (v1.2.6).
@@ -17,10 +17,10 @@ public class PDFVisualComparatorUtil {
 
   private final List<PageArea> excludedAreas = new ArrayList<>();
   private String exclusionFilePath;
+  private InputStream exclusionInputStream;
 
   /**
    * Excludes a rectangular region on a given page.
-   *
    * Coordinates are pixel-based (default 300 DPI in pdfcompare).
    *
    * @param pageNumber page number (starting from 1)
@@ -30,16 +30,20 @@ public class PDFVisualComparatorUtil {
    * @param y2 top coordinate in pixels
    */
   public void excludeRegion(int pageNumber, int x1, int y1, int x2, int y2) {
-    excludedAreas.add(new PageArea(pageNumber, x1, y1, x2, y2));
+    this.excludedAreas.add(new PageArea(pageNumber, x1, y1, x2, y2));
+  }
+
+  public void excludeInputStream(InputStream exclusionInputStream) {
+    this.exclusionInputStream = exclusionInputStream;
   }
 
   /**
    * Excludes an entire page from comparison.
-   *
+   * I have tested this feature to this version, and it is not working as expected. This is the reason to keep it private.
    * @param pageNumber page number (starting from 1)
    */
-  public void excludePage(int pageNumber) {
-    excludedAreas.add(new PageArea(pageNumber));
+  private void excludePage(int pageNumber) {
+    this.excludedAreas.add(new PageArea(pageNumber));
   }
 
   /**
@@ -61,28 +65,28 @@ public class PDFVisualComparatorUtil {
    * @throws IOException if an error occurs during comparison
    */
   public boolean compare(File expected, File actual, File outputDiff) throws IOException {
-    SimpleEnvironment env = new SimpleEnvironment()
-        .setActualColor(java.awt.Color.RED)
-        .setExpectedColor(java.awt.Color.BLUE)
-        .setAddEqualPagesToResult(true);
 
-    PdfComparator comparator = new PdfComparator(expected.getAbsolutePath(), actual.getAbsolutePath())
-        .withEnvironment(env);
+    PdfComparator comparator = new PdfComparator(expected.getAbsolutePath(), actual.getAbsolutePath());
 
     // Apply exclusion file if provided
-    if (exclusionFilePath != null) {
-      comparator = comparator.withIgnore(exclusionFilePath);
+    if (this.exclusionFilePath != null) {
+      comparator.withIgnore(this.exclusionFilePath);
+    }
+
+    if (this.exclusionInputStream != null) {
+      comparator.withIgnore(this.exclusionInputStream);
     }
 
     // Apply in-memory exclusions
-    for (PageArea area : excludedAreas) {
-      comparator = comparator.withIgnore(area);
+    for (PageArea area : this.excludedAreas) {
+      comparator.withIgnore(area);
     }
 
     CompareResult result = comparator.compare();
 
     if (outputDiff != null) {
       result.writeTo(outputDiff.getAbsolutePath());
+      System.out.println(comparator.getResult().getDifferencesJson());
     }
 
     return result.isEqual();
