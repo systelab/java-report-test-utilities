@@ -74,17 +74,16 @@ class PDFVisualComparatorUtilTest {
   }
 
   @Test
-  @Disabled
   // Excluding entire pages is not working as expected in the current pdfcompare version.
   void shouldExcludePagesAndMatch() throws IOException {
     PDFVisualComparatorUtil comparator = createComparator();
-    //comparator.excludePage(2);
-    // comparator.excludePage(3);
+    comparator.excludePage(2);
+    comparator.excludePage(3);
 
     File multiPage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
     File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDatesV3.pdf");
 
-    assertTrue(comparator.compare(multiPageOnePage, multiPage, target("diff_exclude_page")),
+    assertTrue(comparator.compare(multiPage, multiPageOnePage, target("diff_exclude_pages")),
         "PDFs should be equal after excluding pages");
   }
 

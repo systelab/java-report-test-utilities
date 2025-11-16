@@ -39,10 +39,9 @@ public class PDFVisualComparatorUtil {
 
   /**
    * Excludes an entire page from comparison.
-   * I have tested this feature to this version, and it is not working as expected. This is the reason to keep it private.
    * @param pageNumber page number (starting from 1)
    */
-  private void excludePage(int pageNumber) {
+  public void excludePage(int pageNumber) {
     this.excludedAreas.add(new PageArea(pageNumber));
   }
 

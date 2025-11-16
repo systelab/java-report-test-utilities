@@ -47,7 +47,7 @@
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <junit-platform-surefire-provider.version>1.3.2</junit-platform-surefire-provider.version>
         <pdfbox.version>3.0.5</pdfbox.version>
-        <pdfcompare.version>1.2.6</pdfcompare.version>
+        <pdfcompare.version>1.2.7</pdfcompare.version>
     </properties>
 
     <dependencies>
