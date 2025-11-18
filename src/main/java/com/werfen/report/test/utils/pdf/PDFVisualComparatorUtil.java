@@ -11,7 +11,7 @@ import de.redsix.pdfcompare.PageArea;
 import de.redsix.pdfcompare.PdfComparator;
 
 /**
- * Utility class for visually comparing two PDF files using pdfcompare (v1.2.6).
+ * Utility class for visually comparing two PDF files using pdfcompare (v1.2.7).
  */
 public class PDFVisualComparatorUtil {
 

@@ -1,13 +1,12 @@
 package com.werfen.report.test.utils.pdf;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PDFVisualComparatorUtilTest {
 
@@ -32,8 +31,9 @@ class PDFVisualComparatorUtilTest {
     File expected = file("ListOfOrders1PageAndDates.pdf");
     File identical = file("ListOfOrders1PageAndDatesIdentical.pdf");
 
-    assertTrue(comparator.compare(expected, identical, target("diff_identical")),
-        "Identical PDFs should be equal");
+    assertThat(comparator.compare(expected, identical, target("diff_identical")))
+        .as("Identical PDFs should be equal")
+        .isTrue();
   }
 
   @Test
@@ -42,8 +42,9 @@ class PDFVisualComparatorUtilTest {
     File expected = file("ListOfOrders1PageAndDates.pdf");
     File different = file("ListOfOrders1PageAndDatesV2.pdf");
 
-    assertFalse(comparator.compare(expected, different, target("diff_different")),
-        "Different PDFs should not be equal");
+    assertThat(comparator.compare(expected, different, target("diff_different")))
+        .as("Different PDFs should not be equal")
+        .isFalse();
   }
 
   @Test
@@ -54,27 +55,30 @@ class PDFVisualComparatorUtilTest {
     File expected = file("ListOfOrders1PageAndDates.pdf");
     File different = file("ListOfOrders1PageAndDatesV2.pdf");
 
-    assertTrue(comparator.compare(expected, different, target("diff_exclude_region")),
-        "PDFs should be equal after excluding the region");
+    assertThat(comparator.compare(expected, different, target("diff_exclude_region")))
+        .as("PDFs should be equal after excluding the region")
+        .isTrue();
   }
 
   @Test
   void shouldExcludeInputStreamAndMatch() throws IOException {
     PDFVisualComparatorUtil comparator = createComparator();
 
-    final ByteArrayInputStream ignoreIS = new ByteArrayInputStream("exclusions: [{page: 1,x1: 2280,y1: 100,x2: 2880,y2: 200},{page: 2,x1: 2280,y1: 100,x2: 2880,y2: 200},{page: 3,x1: 2280,y1: 100,x2: 2880,y2: 200}]".getBytes());
+    final ByteArrayInputStream ignoreIS = new ByteArrayInputStream(
+        "exclusions: [{page: 1,x1: 2280,y1: 100,x2: 2880,y2: 200},{page: 2,x1: 2280,y1: 100,x2: 2880,y2: 200},{page: 3,x1: 2280,y1: 100,x2: 2880,y2: 200}]".getBytes()
+    );
 
     comparator.excludeInputStream(ignoreIS);
 
     File multiPage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
     File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDatesV2.pdf");
 
-    assertTrue(comparator.compare(multiPageOnePage, multiPage, target("diff_exclude_page")),
-        "PDFs should be equal after excluding pages");
+    assertThat(comparator.compare(multiPageOnePage, multiPage, target("diff_exclude_page")))
+        .as("PDFs should be equal after excluding pages")
+        .isTrue();
   }
 
   @Test
-  // Excluding entire pages is not working as expected in the current pdfcompare version.
   void shouldExcludePagesAndMatch() throws IOException {
     PDFVisualComparatorUtil comparator = createComparator();
     comparator.excludePage(2);
@@ -83,8 +87,9 @@ class PDFVisualComparatorUtilTest {
     File multiPage = file("ListOfOrdersWithMultiplePagesAndDates.pdf");
     File multiPageOnePage = file("ListOfOrdersWithMultiplePagesAndDatesV3.pdf");
 
-    assertTrue(comparator.compare(multiPage, multiPageOnePage, target("diff_exclude_pages")),
-        "PDFs should be equal after excluding pages");
+    assertThat(comparator.compare(multiPage, multiPageOnePage, target("diff_exclude_pages")))
+        .as("PDFs should be equal after excluding pages")
+        .isTrue();
   }
 
   @Test
@@ -97,8 +102,8 @@ class PDFVisualComparatorUtilTest {
     File multiPage = file("ListOfOrders1PageAndDates.pdf");
     File multiPageDiff = file("ListOfOrders1PageAndDatesV2.pdf");
 
-    assertTrue(comparator.compare(multiPage, multiPageDiff, target("diff_exclusion_file")),
-        "PDFs should be equal after applying the exclusion file");
-
+    assertThat(comparator.compare(multiPage, multiPageDiff, target("diff_exclusion_file")))
+        .as("PDFs should be equal after applying the exclusion file")
+        .isTrue();
   }
 }

@@ -1,5 +1,5 @@
 
-# PDFCompare 1.2.6 (JDK 21) – User Guide
+# PDFCompare 1.2.7 (JDK 21) – User Guide
 
 PDFCompare is an open-source Java library used to compare two PDF documents visually and detect differences between them.
 It is widely used in automated testing, document verification, and regression validation to ensure that generated PDFs remain consistent between versions.
@@ -13,14 +13,14 @@ Main benefits:
 ## 1 - Requirements and Configuration
 
 * Maven or Gradle for dependency management
-* Latest version PDFCompare library version 1.2.6 - JDK21
+* Latest version PDFCompare library version 1.2.7 - JDK21
 
 ### Maven Dependency
 ```xml
 <dependency>
     <groupId>de.redsix</groupId>
     <artifactId>pdfcompare</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
 </dependency>
 ```
 ## 2 - Basic Usage
@@ -165,9 +165,6 @@ Y (up)
 * The origin (0,0) is at the bottom-left corner of the page.
 * X increases to the right, Y increases upward.
 * Coordinates are measured in pixels (typically 72 per inch).
-
-## Note
- I have tested to exclude entire pages but althought the documentation of PDFCompare include this feature, it seems that it is not working as expected in version 1.2.6.
 
 ## Links
 * PDFCompare GitHub Repository https://github.com/red6/pdfcompare
