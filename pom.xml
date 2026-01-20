@@ -4,7 +4,7 @@
 
     <groupId>com.systelab</groupId>
     <artifactId>java-report-test-utilities</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
 
     <packaging>jar</packaging>
     <name>java-report-test-utilities</name>
@@ -47,6 +47,7 @@
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <junit-platform-surefire-provider.version>1.3.2</junit-platform-surefire-provider.version>
         <pdfbox.version>3.0.5</pdfbox.version>
+        <pdfcompare.version>1.2.7</pdfcompare.version>
     </properties>
 
     <dependencies>
@@ -75,10 +76,22 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.jupiter.version}</version>
         </dependency>
+      <!-- AssertJ (para aserciones más expresivas) -->
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.24.2</version>
+        <scope>test</scope>
+      </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>${pdfbox.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>de.redsix</groupId>
+          <artifactId>pdfcompare</artifactId>
+          <version>${pdfcompare.version}</version>
         </dependency>
     </dependencies>
 
