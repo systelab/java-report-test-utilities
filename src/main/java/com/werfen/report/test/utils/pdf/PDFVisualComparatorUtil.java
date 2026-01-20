@@ -85,7 +85,6 @@ public class PDFVisualComparatorUtil {
 
     if (outputDiff != null) {
       result.writeTo(outputDiff.getAbsolutePath());
-      System.out.println(comparator.getResult().getDifferencesJson());
     }
 
     return result.isEqual();
