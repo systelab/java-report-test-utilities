@@ -4,7 +4,7 @@
 
     <groupId>com.systelab</groupId>
     <artifactId>java-report-test-utilities</artifactId>
-    <version>2.0.3</version>
+    <version>3.0.0</version>
 
     <packaging>jar</packaging>
     <name>java-report-test-utilities</name>
@@ -77,7 +77,7 @@
             <version>${junit.jupiter.version}</version>
         </dependency>
 
-      <!-- AssertJ (para aserciones más expresivas) -->
+      <!-- AssertJ (for more expressive assertions) -->
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
