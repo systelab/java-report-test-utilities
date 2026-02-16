@@ -12,7 +12,7 @@ To get you started you can simply clone the `java-report-test-utilities` reposit
 
 You need [git][git] to clone the `java-report-test-utilities` repository.
 
-You will need [Java™ SE Development Kit 21](https://adoptium.net/temurin/releases/) [jdk-download](https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.5%2B11) and [Maven][maven].
+You will need [Java™ SE Development Kit 25](https://adoptium.net/temurin/releases/) [jdk-download](https://github.com/adoptium/temurin25-binaries/releases/tag/jdk-25.0.2%2B10) and [Maven][maven].
 
 ### Clone
 

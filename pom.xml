@@ -4,7 +4,7 @@
 
     <groupId>com.systelab</groupId>
     <artifactId>java-report-test-utilities</artifactId>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
 
     <packaging>jar</packaging>
     <name>java-report-test-utilities</name>
@@ -37,17 +37,17 @@
     </licenses>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <lombok.version>1.18.38</lombok.version>
-        <poi.version>5.4.1</poi.version>
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <junit.jupiter.version>5.13.4</junit.jupiter.version>
-        <junit-platform-surefire-provider.version>1.3.2</junit-platform-surefire-provider.version>
-        <pdfbox.version>3.0.5</pdfbox.version>
-        <pdfcompare.version>1.2.7</pdfcompare.version>
+        <lombok.version>1.18.42</lombok.version>
+        <poi.version>5.5.1</poi.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <junit.jupiter.version>6.0.2</junit.jupiter.version>
+        <pdfbox.version>3.0.6</pdfbox.version>
+        <pdfcompare.version>1.2.8</pdfcompare.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
     </properties>
 
     <dependencies>
@@ -76,11 +76,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.jupiter.version}</version>
         </dependency>
-      <!-- AssertJ (para aserciones más expresivas) -->
+
+      <!-- AssertJ (for more expressive assertions) -->
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
-        <version>3.24.2</version>
+        <version>${assertj-core.version}</version>
         <scope>test</scope>
       </dependency>
         <dependency>
@@ -101,18 +102,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>${junit-platform-surefire-provider.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit.jupiter.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
