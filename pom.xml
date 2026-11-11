@@ -4,7 +4,7 @@
 
     <groupId>com.systelab</groupId>
     <artifactId>java-report-test-utilities</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
 
     <packaging>jar</packaging>
     <name>java-report-test-utilities</name>
@@ -40,13 +40,13 @@
         <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <lombok.version>1.18.42</lombok.version>
-        <poi.version>5.5.1</poi.version>
-        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <junit.jupiter.version>6.0.2</junit.jupiter.version>
-        <pdfbox.version>3.0.6</pdfbox.version>
-        <pdfcompare.version>1.2.8</pdfcompare.version>
+        <lombok.version>1.18.48</lombok.version>
+        <poi.version>6.0.0</poi.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
+        <junit-jupiter.version>6.1.3</junit-jupiter.version>
+        <pdfbox.version>3.0.8</pdfbox.version>
+        <pdfcompare.version>1.2.13</pdfcompare.version>
         <assertj-core.version>3.27.7</assertj-core.version>
     </properties>
 
@@ -69,12 +69,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>${junit-jupiter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>${junit-jupiter.version}</version>
         </dependency>
 
       <!-- AssertJ (for more expressive assertions) -->
